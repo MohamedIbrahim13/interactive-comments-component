@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { decScore, incScore } from "../actions/commentsAction";
+import { useEffect, useState, useRef } from "react";
 
 export default function Reply({
   replies,
@@ -8,6 +9,15 @@ export default function Reply({
   currentUser,
 }) {
   const dispatch = useDispatch();
+  const [isOpened, setOpened] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (isOpened) {
+      ref.current?.showModal();
+    } else {
+      ref.current?.close();
+    }
+  }, [isOpened]);
   //console.log(currentUser);
   return (
     <>
@@ -48,12 +58,35 @@ export default function Reply({
                       ) : null}
                       <span>{reply.createdAt}</span>
                     </h6>
+                    <dialog ref={ref}>
+                      <h1>Delete Reply</h1>
+                      <p>
+                        Are you sure you want to delete this reply? this will
+                        remove the reply and can't ne undone
+                      </p>
+                      <form method="dialog">
+                        <div className="buttons">
+                          <button
+                            className="no"
+                            onClick={() => setOpened(prev => !prev)}
+                          >
+                            NO,CANCEL
+                          </button>
+                          <button
+                            className="yes"
+                            onClick={() =>
+                              dispatch(deleteReply(commentId, reply.id))
+                            }
+                          >
+                            YES,DELETE
+                          </button>
+                        </div>
+                      </form>
+                    </dialog>
                     {reply.user.username === currentUser?.username ? (
                       <button
                         className="delete"
-                        onClick={() =>
-                          dispatch(deleteReply(commentId, reply.id))
-                        }
+                        onClick={() => setOpened(prev => !prev)}
                       >
                         <img src="/icon-delete.svg" alt="" /> Delete
                       </button>

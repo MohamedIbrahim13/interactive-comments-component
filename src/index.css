@@ -495,7 +495,7 @@ img {
   width: 32px;
   background-color: var(--verylightgray);
   border-radius: 8px;
-  
+
   .increase-button {
     border-radius: 8px 8px 0 0;
     &.value-button {
@@ -667,9 +667,46 @@ hr {
     }
   }
 }
+dialog {
+  padding: 20px;
+  background-color: var(--white);
+  border-radius: 6px;
+  width: 25dvw;
+  & h1 {
+    color: var(--darkblue);
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  & p {
+    margin: 15px 0;
+  }
+  .buttons {
+    width: inherit;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    & button {
+      color: white;
+      font-size: 14px;
+      border-radius: 6px;
+      padding: 8px 16px;
+    }
+    .yes {
+      background-color: var(--softRed);
+    }
+    .no {
+      background: var(--grayishBlue);
+    }
+  }
+  &::backdrop {
+    backdrop-filter: opacity(10%);
+  }
+}
 
 @media screen and (max-width: 480px) {
-  main {
+  main,
+  dialog {
     width: 95dvw;
   }
 
