@@ -461,7 +461,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100dvh;
+  min-height: 100dvh;
 }
 
 main {
@@ -643,14 +643,18 @@ hr {
   width: calc(55dvw - 48px - 3.5%);
 }
 
-.comment-form {
+.comment-form,
+.edit-form {
   margin: -5px 0 10px 0;
   & textarea {
-    width: 80%;
     padding: 10px 20px;
     border: 1px solid var(--lightgray);
     border-radius: 6px;
     resize: none;
+    outline: none;
+    &:focus{
+      border: 1px solid var(--moderateblue);
+    }
   }
   & button {
     background: var(--moderateblue) !important;
@@ -665,6 +669,21 @@ hr {
       cursor: pointer;
       background-color: var(--lightgrayishblue) !important;
     }
+  }
+}
+
+.comment-form {
+  & textarea {
+    width: 80%;
+  }
+}
+
+.edit-form {
+  & textarea {
+    width: 100%;
+  }
+  & button {
+    float: right;
   }
 }
 dialog {

@@ -1,30 +1,40 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { sendComment } from "../actions/commentsAction";
+import { sendReply } from "../actions/commentsAction";
 import { v4 as uuid } from "uuid";
 import { formatDistance } from "date-fns";
 
-export default function Form({ currentUser }) {
+export default function ReplyForm({
+  currentUser,
+  replyingTo,
+  commentId,
+  setIsClicked,
+}) {
   const [inputData, setInput] = useState({
     id: uuid(),
     content: "",
     createdAt: formatDistance(Date.now(), new Date(), { addSuffix: true }),
     score: 0,
     user: null,
-    replies: [],
+    replyingTo: "",
   });
+
   const dispatch = useDispatch();
+
   const handleSubmit = async e => {
     e.preventDefault();
-    dispatch(sendComment({ ...inputData, user: currentUser }));
+    dispatch(
+      sendReply(commentId, { ...inputData, replyingTo, user: currentUser })
+    );
     setInput({
       id: "",
       content: "",
       createdAt: formatDistance(Date.now(), new Date(), { addSuffix: true }),
       score: 0,
       user: null,
-      replies: [],
+      replyingTo: "",
     });
+    setIsClicked(prev => !prev);
   };
 
   useEffect(() => {

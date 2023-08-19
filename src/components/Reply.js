@@ -1,6 +1,8 @@
 import { useDispatch } from "react-redux";
-import { decScore, incScore } from "../actions/commentsAction";
+import { decScore, incScore, editReply } from "../actions/commentsAction";
 import { useEffect, useState, useRef } from "react";
+import ReplyModal from "./ReplyModal";
+import EditReplyForm from "./EditReplyForm";
 
 export default function Reply({
   replies,
@@ -10,12 +12,13 @@ export default function Reply({
 }) {
   const dispatch = useDispatch();
   const [isOpened, setOpened] = useState(false);
-  const ref = useRef(null);
+  const [edit, setEdit] = useState(false);
+  const inputref = useRef(null);
   useEffect(() => {
     if (isOpened) {
-      ref.current?.showModal();
+      inputref.current?.showModal();
     } else {
-      ref.current?.close();
+      inputref.current?.close();
     }
   }, [isOpened]);
   //console.log(currentUser);
@@ -58,31 +61,15 @@ export default function Reply({
                       ) : null}
                       <span>{reply.createdAt}</span>
                     </h6>
-                    <dialog ref={ref}>
-                      <h1>Delete Reply</h1>
-                      <p>
-                        Are you sure you want to delete this reply? this will
-                        remove the reply and can't ne undone
-                      </p>
-                      <form method="dialog">
-                        <div className="buttons">
-                          <button
-                            className="no"
-                            onClick={() => setOpened(prev => !prev)}
-                          >
-                            NO,CANCEL
-                          </button>
-                          <button
-                            className="yes"
-                            onClick={() =>
-                              dispatch(deleteReply(commentId, reply.id))
-                            }
-                          >
-                            YES,DELETE
-                          </button>
-                        </div>
-                      </form>
-                    </dialog>
+                    <ReplyModal
+                      inputref={inputref}
+                      commentId={commentId}
+                      replyId={reply.id}
+                      setOpened={setOpened}
+                      dispatch={dispatch}
+                      deleteReply={deleteReply}
+                    />
+
                     {reply.user.username === currentUser?.username ? (
                       <button
                         className="delete"
@@ -93,14 +80,28 @@ export default function Reply({
                     ) : null}
                   </div>
 
-                  <p>
-                    <span className="tag">@{reply.replyingTo}</span>{" "}
-                    {reply.content}
-                  </p>
+                  {edit ? (
+                    <EditReplyForm
+                      reply={reply}
+                      dispatch={dispatch}
+                      editReply={editReply}
+                      commentId={commentId}
+                      currentUser={currentUser}
+                      setEdit={setEdit}
+                    />
+                  ) : (
+                    <p>
+                      <span className="tag">@{reply.replyingTo}</span>{" "}
+                      {reply.content}
+                    </p>
+                  )}
                 </div>
               </div>
               {reply.user.username === currentUser?.username ? (
-                <button className="reply">
+                <button
+                  className="reply"
+                  onClick={() => setEdit(prev => !prev)}
+                >
                   <img src="/icon-edit.svg" alt="" /> Edit
                 </button>
               ) : (

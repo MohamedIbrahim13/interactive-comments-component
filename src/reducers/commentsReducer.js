@@ -13,10 +13,34 @@ const commentsReducer = (state = initialState, action) => {
       return state;
     case "EDIT_REPLY":
       //console.log("payload", action.payload);
-      return state;
+      return {
+        ...state,
+        comments: state.comments.map(comment => {
+          return comment.id === action.payload.commentId
+            ? {
+                ...comment,
+                replies: comment.replies.map(reply => {
+                  return reply.id === action.payload.replyId
+                    ? action.payload.newValue
+                    : reply;
+                }),
+              }
+            : comment;
+        }),
+      };
     case "SEND_REPLY":
       //console.log("payload", action.payload);
-      return state;
+      return {
+        ...state,
+        comments: state.comments.map(comment => {
+          return comment.id === action.payload.commentId
+            ? {
+                ...comment,
+                replies: [...comment.replies, action.payload.reply],
+              }
+            : comment;
+        }),
+      };
     case "INC_SCORE":
       //console.log("payload", action.payload);
       return {

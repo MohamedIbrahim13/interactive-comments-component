@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrUser } from "./actions/userAction";
 import Comment from "./components/Comment";
-import Form from "./components/Form";
+import CommentForm from "./components/CommentForm";
 import { useEffect } from "react";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   return (
     <main>
       <Comment currentUser={currentUser} />
-      <Form currentUser={currentUser} />
+      <CommentForm currentUser={currentUser} />
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   decScore,
@@ -8,21 +8,61 @@ import {
   deleteComment,
 } from "../actions/commentsAction";
 import Reply from "./Reply";
-import Form from "./Form";
+import CommentModal from "./CommentModal";
+import ReplyForm from "./ReplyForm";
 
 export default function Comment({ currentUser }) {
   const { comments } = useSelector(state => state.comments);
   const dispatch = useDispatch();
   const [clicked, setIsClicked] = useState(false);
+  const [isOpened, setOpened] = useState(false);
+  const inputref = useRef(null);
 
   useEffect(() => {
     dispatch(getComments());
   }, [dispatch]);
+  // const replyForm = commentId => {
+  //   if (commentId) {
+  //     setIsClicked(prev => !prev);
+  //   }
+  // };
+  useEffect(() => {
+    if (isOpened) {
+      inputref.current?.showModal();
+    } else {
+      inputref.current?.close();
+    }
+  }, [isOpened]);
   console.log("comments", comments);
   return (
     <>
       {comments &&
         comments.map(comment => {
+          const displayForm = comment => {
+            switch (comment.id) {
+              case 1:
+                return (
+                  <ReplyForm
+                    currentUser={currentUser}
+                    replyingTo={comment.user.username}
+                    commentId={comment.id}
+                    setIsClicked={setIsClicked}
+                  />
+                );
+              case 2:
+                return (
+                  <ReplyForm
+                    currentUser={currentUser}
+                    replyingTo={comment.user.username}
+                    commentId={comment.id}
+                    setIsClicked={setIsClicked}
+                  />
+                );
+
+              default:
+                return null;
+            }
+          };
           return (
             <>
               <div className="comment-container" key={comment.id}>
@@ -61,10 +101,17 @@ export default function Comment({ currentUser }) {
                         ) : null}
                         <span>{comment.createdAt}</span>
                       </h6>
+                      <CommentModal
+                        inputref={inputref}
+                        dispatch={dispatch}
+                        deleteComment={deleteComment}
+                        commentId={comment.id}
+                        setOpened={setOpened}
+                      />
                       {comment.user.username === currentUser?.username ? (
                         <button
                           className="delete"
-                          onClick={() => dispatch(deleteComment(comment.id))}
+                          onClick={() => setOpened(prev => !prev)}
                         >
                           <img src="/icon-delete.svg" alt="" /> Delete
                         </button>
@@ -80,7 +127,7 @@ export default function Comment({ currentUser }) {
                   <img src="/icon-reply.svg" alt="" /> Reply
                 </button>
               </div>
-              {clicked && <Form />}
+              {clicked && displayForm(comment)}
               {comment.replies && (
                 <Reply
                   replies={comment.replies}

@@ -21,7 +21,7 @@ export const sendComment = comment => async dispatch => {
 export const sendReply = (commentId, reply) => async dispatch => {
   try {
     dispatch({ type: "SEND_REPLY", payload: { commentId, reply } });
-    console.log("id", { commentId, reply });
+    //console.log("id", { commentId, reply });
   } catch (error) {
     console.log(error);
   }
@@ -39,7 +39,7 @@ export const editComment = (commentId, newValue) => async dispatch => {
 export const editReply = (commentId, replyId, newValue) => async dispatch => {
   try {
     dispatch({ type: "EDIT_REPLY", payload: { commentId, replyId, newValue } });
-    console.log("id", { commentId, replyId, newValue });
+    //console.log("id", { commentId, replyId, newValue });
   } catch (error) {
     console.log(error);
   }
